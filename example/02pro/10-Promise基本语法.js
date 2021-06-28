@@ -5,7 +5,7 @@ const fs = require('fs') //引入node.js中的本地文件扩展模块
 //Promise对象有三个状态：初始化状态、成功、失败
 //resolve：函数类型的参数，可以将promise的状态设置为成功
 //reject：函数类型的参数，可以将promise的状态设置为失败
-const p = new Promise((resolve, reject) => {
+const p = new Promise( (resolve, reject) => {
   //执行异步操作
   //第一个参数：读取的文件的路径
   //第二个参数：读取过程中对响应结果的处理

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body>
+    <script src="axios.js"></script>
+    <script>
+        const request = axios.create({
+            baseURL:'http://localhost:8080',
+            timeout:1000,
+            Headers:{
+                token:'dsc789'
+            },
+        })
+        // 请求拦截器
+        request.interceptors.request.use(
+            (config)=>{
+                console.log('请求拦截')
+                console.log('config',config)
+                config.Headers.token='dsc789'
+                //放行
+                return config
+            },
+            (error)=>{
+                return Promise.reject(error)
+            }
+        )
+
+        //添加响应拦截器
+      request.interceptors.response.use(
+            function (response) {
+                console.log('response', response)
+                return response.data
+            },
+            function (error) {
+                //对错误做点什么
+                //......
+                return Promise.reject(error)
+            }
+        )
+
+        request({
+             url:'/user/list',
+             method:'get',
+        })
+        .then((response)=>{
+            console.log('数据获取成功',response)
+        })
+        .catch((Error)=>{
+            console.log('数据获取失败',Error)
+        })
+
+        //另一种写法
+        request
+        .get('/user/list')
+        .then((response)=>{
+            console.log('数据获取成功', response.data)
+        })
+            .catch((error) => {
+                console.log('数据获取失败', error)
+            })
+    </script>
