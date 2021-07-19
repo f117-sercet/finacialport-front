@@ -6,12 +6,6 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
-/* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -26,8 +20,6 @@ import nestedRouter from './modules/nested'
     roles: ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    noCache: true                if set true, the page will no be cached(default is false)
-    affix: true                  if set true, the tag will affix in the tags-view
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
@@ -40,85 +32,189 @@ import nestedRouter from './modules/nested'
  */
 export const constantRoutes = [
   {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
-  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
+
   {
     path: '/404',
-    component: () => import('@/views/error-page/404'),
+    component: () => import('@/views/404'),
     hidden: true
   },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
+
   {
     path: '/',
-    component: Layout,
+    component: Layout, //布局组件
     redirect: '/dashboard',
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' }
       }
     ]
   },
+
   {
-    path: '/documentation',
+    path: '/core/integral-grade',
     component: Layout,
+    redirect: '/core/integral-grade/list',
+    name: 'coreIntegralGrade',
+    meta: { title: '积分等级管理', icon: 'el-icon-s-marketing' },
+    // false（默认值）：当且仅当父节点下只有一个子节点时，不显示父节点
+    // true：任何时候都显示父节点和子节点
+    alwaysShow: true,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
+        path: 'list',
+        name: 'coreIntegralGradeList', //每个路由节点的name的名字不能相同
+        component: () => import('@/views/core/integral-grade/list'), //指向template模板组件
+        meta: { title: '积分等级列表' } //定义导航的标题
+      },
+      {
+        path: 'create',
+        name: 'coreIntegralGradeCreate',
+        component: () => import('@/views/core/integral-grade/form'),
+        meta: { title: '新增积分等级' }
+      },
+      {
+        path: 'edit/:id', // :id 是一个占位符，表示这部分url会是任何一个id
+        name: 'coreIntegralGradeEdit',
+        component: () => import('@/views/core/integral-grade/form'),
+        meta: { title: '编辑积分等级' },
+        hidden: true
       }
     ]
   },
+
   {
-    path: '/guide',
+    path: '/core/user-info',
     component: Layout,
-    redirect: '/guide/index',
+    redirect: '/core/user-info/list',
+    name: 'coreUserInfo',
+    meta: { title: '会员管理', icon: 'user' },
+    alwaysShow: true,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
+        path: 'list',
+        name: 'coreUserInfoList',
+        component: () => import('@/views/core/user-info/list'),
+        meta: { title: '会员列表' }
       }
     ]
   },
+
   {
-    path: '/profile',
+    path: '/core/borrower',
     component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
+    name: 'coreBorrower',
+    meta: { title: '借款管理', icon: 'el-icon-s-unfold' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'list',
+        name: 'coreBorrowerList',
+        component: () => import('@/views/core/borrower/list'),
+        meta: { title: '借款人列表' }
+      },
+      {
+        path: 'detail/:id',
+        name: 'coreBorrowerDetail',
+        component: () => import('@/views/core/borrower/detail'),
+        meta: { title: '借款人详情' },
+        hidden: true
+      },
+      {
+        path: 'info-list',
+        name: 'coreBorrowInfoList',
+        component: () => import('@/views/core/borrow-info/list'),
+        meta: { title: '借款列表' }
+      },
+      {
+        path: 'info-detail/:id',
+        name: 'coreBorrowInfoDetail',
+        component: () => import('@/views/core/borrow-info/detail'),
+        meta: { title: '借款详情' },
+        hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/core/lend',
+    component: Layout,
+    name: 'coreLend',
+    meta: { title: '标的管理', icon: 'el-icon-s-flag' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'list',
+        name: 'coreLendList',
+        component: () => import('@/views/core/lend/list'),
+        meta: { title: '标的列表' }
+      },
+      {
+        path: 'detail/:id',
+        name: 'coreLendDetail',
+        component: () => import('@/views/core/lend/detail'),
+        meta: { title: '标的详情' },
+        hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/core',
+    component: Layout,
+    redirect: '/core/dict/list',
+    name: 'coreDict',
+    meta: { title: '系统设置', icon: 'el-icon-setting' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'dict/list',
+        name: '数据字典',
+        component: () => import('@/views/core/dict/list'),
+        meta: { title: '数据字典' }
+      }
+    ]
+  },
+
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/table',
+    name: 'Example',
+    meta: { title: '例子', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: '表格', icon: 'table' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '树', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/form',
+    component: Layout,
+    meta: { title: '一级标题', icon: 'el-icon-goods' },
+    alwaysShow: true,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        name: 'Form',
+        component: () => import('@/views/form/index'),
+        meta: { title: '表单', icon: 'form' }
       }
     ]
   }
@@ -130,244 +226,61 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/permission',
+    path: '/nested',
     component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    redirect: '/nested/menu1',
+    name: 'Nested',
     meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      title: 'Nested',
+      icon: 'nested'
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        name: 'Menu1',
+        meta: { title: 'Menu1' },
+        children: [
+          {
+            path: 'menu1-1',
+            component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: 'Menu1-1' }
+          },
+          {
+            path: 'menu1-2',
+            component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'Menu1-2',
+            meta: { title: 'Menu1-2' },
+            children: [
+              {
+                path: 'menu1-2-1',
+                component: () =>
+                  import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+                name: 'Menu1-2-1',
+                meta: { title: 'Menu1-2-1' }
+              },
+              {
+                path: 'menu1-2-2',
+                component: () =>
+                  import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+                name: 'Menu1-2-2',
+                meta: { title: 'Menu1-2-2' }
+              }
+            ]
+          },
+          {
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'Menu1-3',
+            meta: { title: 'Menu1-3' }
+          }
+        ]
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['admin']
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
-
-  /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-  chartsRouter,
-  nestedRouter,
-  tableRouter,
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
-    meta: {
-      title: 'Example',
-      icon: 'el-icon-s-help'
-    },
-    children: [
-      {
-        path: 'create',
-        component: () => import('@/views/example/create'),
-        name: 'CreateArticle',
-        meta: { title: 'Create Article', icon: 'edit' }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
-        name: 'EditArticle',
-        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
-        hidden: true
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/example/list'),
-        name: 'ArticleList',
-        meta: { title: 'Article List', icon: 'list' }
-      }
-    ]
-  },
-
-  {
-    path: '/tab',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/tab/index'),
-        name: 'Tab',
-        meta: { title: 'Tab', icon: 'tab' }
-      }
-    ]
-  },
-
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: 'Error Pages',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
-  },
-
-  {
-    path: '/error-log',
-    component: Layout,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'Error Log', icon: 'bug' }
-      }
-    ]
-  },
-
-  {
-    path: '/excel',
-    component: Layout,
-    redirect: '/excel/export-excel',
-    name: 'Excel',
-    meta: {
-      title: 'Excel',
-      icon: 'excel'
-    },
-    children: [
-      {
-        path: 'export-excel',
-        component: () => import('@/views/excel/export-excel'),
-        name: 'ExportExcel',
-        meta: { title: 'Export Excel' }
-      },
-      {
-        path: 'export-selected-excel',
-        component: () => import('@/views/excel/select-excel'),
-        name: 'SelectExcel',
-        meta: { title: 'Export Selected' }
-      },
-      {
-        path: 'export-merge-header',
-        component: () => import('@/views/excel/merge-header'),
-        name: 'MergeHeader',
-        meta: { title: 'Merge Header' }
-      },
-      {
-        path: 'upload-excel',
-        component: () => import('@/views/excel/upload-excel'),
-        name: 'UploadExcel',
-        meta: { title: 'Upload Excel' }
-      }
-    ]
-  },
-
-  {
-    path: '/zip',
-    component: Layout,
-    redirect: '/zip/download',
-    alwaysShow: true,
-    name: 'Zip',
-    meta: { title: 'Zip', icon: 'zip' },
-    children: [
-      {
-        path: 'download',
-        component: () => import('@/views/zip/index'),
-        name: 'ExportZip',
-        meta: { title: 'Export Zip' }
-      }
-    ]
-  },
-
-  {
-    path: '/pdf',
-    component: Layout,
-    redirect: '/pdf/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/pdf/index'),
-        name: 'PDF',
-        meta: { title: 'PDF', icon: 'pdf' }
-      }
-    ]
-  },
-  {
-    path: '/pdf/download',
-    component: () => import('@/views/pdf/download'),
-    hidden: true
-  },
-
-  {
-    path: '/theme',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/theme/index'),
-        name: 'Theme',
-        meta: { title: 'Theme', icon: 'theme' }
-      }
-    ]
-  },
-
-  {
-    path: '/clipboard',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'Clipboard', icon: 'clipboard' }
+        path: 'menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        meta: { title: 'menu2' }
       }
     ]
   },
@@ -377,7 +290,7 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
+        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
@@ -387,11 +300,12 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
