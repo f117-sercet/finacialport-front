@@ -50,8 +50,13 @@ export default {
         /**登录 */
         login(){
             this.$axios
-            .$post()
-        }
-    }
+            .$post('/api/core/userInfo/login',this.userInfo)
+            .then((response)=>{
+                console.log(response)
+                cookie.set('userInfo',response.data.userInfo)
+                window.location.href='/user'
+            })
+        },
+    },
 }
 </script>

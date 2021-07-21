@@ -1,50 +1,65 @@
 <template>
-  <div>
-    <NuxtLink to="/about">
-      关于我们
-    </NuxtLink>
-    <NuxtLink to="/lend">
-      我要投资
-    </NuxtLink>
-    <NuxtLink to="/user">
-      用户中心
-    </NuxtLink>
-    <a href="http://atguigu.com" target="_blank">尚硅谷</a>
-
-    <h1>主页面</h1>
-    <p>您的ip是 {{ ip1 }}</p>
-  </div>
+  <main>
+    <div>
+      <a target="_blank" href="/">
+        <img src="~/assets/images/banner.jpg" />
+      </a>
+    </div>
+    <div class="new-announcement">
+      <div class="new-announcement-title">最新公告</div>
+      <div class="new-announcement-content">
+        <div id="scrollDiv">
+          <ul style="margin-top: 0px;">
+            <li>
+              <a class="black-link" href="公司公告详细.html" target="_blank">
+                2020年9月8日还款公告
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ipubs">
+      <span class="o1">累计投资金额:<strong>1,047,288,128.79</strong>元</span>
+      <span class="o1">累计注册人数:<strong>20649</strong>人</span>
+    </div>
+    <div class="feature">
+      <a class="fea1" href="#">
+        <i></i>
+        <h3>高收益</h3>
+        <span>
+          年化收益率最高达“20%<br />
+          50元起投，助您轻松获收益
+        </span>
+      </a>
+      <a class="fea2" href="#">
+        <i></i>
+        <h3>安全理财</h3>
+        <span>
+          100%本息保障<br />
+          实物质押，多重风控审核
+        </span>
+      </a>
+      <a class="fea3" href="#">
+        <i></i>
+        <h3>随时赎回</h3>
+        <span>
+          两步赎回您的资金<br />
+          最快当日到账
+        </span>
+      </a>
+      <a class="fea4" href="#">
+        <i></i>
+        <h3>随时随地理财</h3>
+        <span>
+          下载手机客户端<br />
+          随时随地轻松理财
+        </span>
+      </a>
+    </div>
+  </main>
 </template>
-
 <script>
-export default {
-  //服务器端数据渲染
-  async asyncData({ $axios }) {
-    console.log('axios', $axios)
-
-    //同步操作
-    let response = await $axios.$get('/')
-    return {
-      ip1: response, //response未定义
-    }
-  },
-
-  data() {
-    return {
-      ip: null,
-    }
-  },
-
-  created() {
-    // get
-    // this.$axios.get('http://icanhazip.com/').then((response) => {
-    //   console.log(response)
-    //   this.ip = response.data
-    // })
-    // this.$axios.$get('http://icanhazip.com/').then((response) => {
-    //   console.log(response)
-    //   this.ip = response
-    // })
-  },
-}
+import  '~/assets/css/index.css'
+      export default{}
 </script>

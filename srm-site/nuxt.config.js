@@ -1,6 +1,6 @@
 module.exports = {
   head: {
-    title: '尚融宝',
+    title: '某融资平台',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
