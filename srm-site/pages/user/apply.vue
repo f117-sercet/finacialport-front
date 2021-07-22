@@ -128,8 +128,91 @@ export default {
       borrowAmount:0,/**借款额度 */
       submitBtnDisabled:false,
       returnMethodList:[],/**还款方式列表 */
+      moneyUseList:[]/**资金用途列表 */
     }
   },
   
+  watch:{
+
+    'borrowInfo.amount'(value){
+
+      if(value > this.borrowAmount){
+        let_this = this
+        this.$alert('您的额度不足',{
+          type:'error',
+          callback(){
+            _this.borrowInfo.amount = _this.borrowAmount
+          },
+        })
+      }
+    },
+  },
+   created(){
+     this.getBorrowInfoStatus()
+   },
+   methods:{
+     getBorrowInfoStatus(){
+       this.$axios
+       .$get('/api/core/borrowInfo/auth/getBorrowInfoStatus')
+       .then((response)=>{
+         this.borrowInfoStatus = response.data.borrowInfo.borrowInfoStatus
+         if(this.borrowInfoStatus ===0){
+           //未认证
+           this.active = 0
+
+           //获取借款额度
+           this.getBorrowAmount()
+
+           //初始化下拉列表
+           this.initSelected()
+         }else if(this.borrowInfoStatus === 1){
+          //审批中
+           this.active =1
+         }else if(this.borrowInfoStatus === 2){
+
+           //审批成功
+           this.active =2
+         }else if(this.borrowInfoStatus ===-1){
+           //审批失败
+           this.active =2
+         }
+       })
+     },
+
+     //初始化下拉列表的数据
+     initSelected(){
+       //还款方式列表
+       this.$axios
+       .$get('/api/core/dict/findByDictCode/returnMethod')
+       .then((response)=>{
+         this.returnMethodList = response.data.dictList
+       })
+
+       //资金用途列表
+        this.$axios
+        .$get('/api/core/dict/findByDictCode/moneyUse')
+        .then((response) => {
+          this.moneyUseList = response.data.dictList
+        })
+     },
+
+      getBorrowAmount(){
+
+        this.$axios
+        .$get('/api/core/borrowInfo/auth/getBorrowAmount')
+        .then((response)=>{
+          this.borrowAmount = response.data.borrowAmount
+        })
+      },
+
+      //提交借款申请
+      save(){
+        this.$axios
+        .$post('/api/core/borrowInfo/auth/save', this.borrowInfo)
+        .then((response)=>{
+          this.active = 1
+        })
+      },
+   },
 }
 </script>
